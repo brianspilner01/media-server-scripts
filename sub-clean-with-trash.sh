@@ -1,19 +1,22 @@
 #!/bin/bash
 # cleans srt formatted subtitles of common blocks that may be considered unwanted, works well as a post-process script for software such as Bazarr or Sub-Zero
+# includes optional trash folder for "back up" of unmodified subtitle as well as a list of removed records (for reviewal)
+# if trash directory is ommitted, sub is modified in-place
 # please consider leaving or modifying this regex to properly credit the hard work that is put into providing these subtitles
 
 SUB_FILEPATH="$1"
 
-[ ! -f "$SUB_FILEPATH" ] && { echo "usage: sub-clean.sh [FILE]" ; echo "Warning: subtitle file does not exist" ; exit 1 ; }
+# check usage
+[ ! -f "$SUB_FILEPATH" ] && { echo "usage: sub-clean.sh [FILE] <TRASH DIR>" ; echo "Warning: subtitle file does not exist" ; exit 1 ; }
 
 # define trash folder (leave blank to disable trash) used for backing up unprocessed sub
-TRASH=
+TRASH="$2"
 
 
 # convert any DOS formatted files to UNIX (remove carriage return line endings)
 sed -i 's/\r$//' "$SUB_FILEPATH"
 
-#lowercase list of regexes that will be removed from srt
+# lowercase list of regex (gore/magic?) that will be removed from srt
 REGEX_TO_REMOVE='opensubtitles|sub(scene|text|rip)|podnapisi|addic7ed|yify|napisy|bozxphd|sazu489|anoxmous|(br|dvd|web).?(rip|scr)|english (- )?us|sdh|srt|(sub(title)?(bed)?(s)?(fix)?|encode(d)?|correct(ed|ion(s)?)|caption(s|ed)|sync(ed|hroniz(ation|ed))?|english)(.pr(esented|oduced))?.?(by|&)|[^a-z]www\.|http|\.( )?(com|co|link|org|net|mp4|mkv|avi)([^a-z]|$)|©|™'
 
 # removed lines will be placed in this file
