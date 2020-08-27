@@ -2,6 +2,19 @@
 # cleans srt formatted subtitles of common blocks that may be considered unwanted, works well as a post-process script for software such as Bazarr or Sub-Zero
 # please consider leaving or modifying this regex to properly credit the hard work that is put into providing these subtitles
 
+### usage:
+## Download this file from the command line to your current directory:
+# curl https://raw.githubusercontent.com/brianspilner01/media-server-scripts/master/sub-clean.sh > sub-clean.sh && chmod +x sub-clean.sh
+## Run this script across your whole media library:
+# find /path/to/library -name '*.srt' -exec /path/to/sub-clean.sh "{}" \;
+## Add to Bazarr (Settings > Subtitles > Use Custom Post-Processing > Post-processing command):
+# /path/to/sub-clean.sh '{{subtitles}}' --
+## Add to Sub-Zero (in Plex > Settings > under Manage > Plugins > Sub-Zero Subtitles > Call this executable upon successful subtitle download (near the bottom):
+# /path/to/sub-clean.sh %(subtitle_path)s
+## Test out what lines this script would remove:
+# REGEX_TO_REMOVE='opensubtitles|sub(scene|text|rip)|podnapisi|addic7ed|yify|napisy|bozxphd|sazu489|anoxmous|(br|dvd|web).?(rip|scr)|english (- )?us|sdh|srt|(sub(title)?(bed)?(s)?(fix)?|encode(d)?|correct(ed|ion(s)?)|caption(s|ed)|sync(ed|hroniz(ation|ed))?|english)(.pr(esented|oduced))?.?(by|&)|[^a-z]www\.|http|\.( )?(com|co|link|org|net|mp4|mkv|avi)([^a-z]|$)|©|™'
+# awk 'tolower($0) ~ '"/$REGEX_TO_REMOVE/" RS='' ORS='\n\n' "/path/to/sub.srt"
+
 SUB_FILEPATH="$1"
 
 # check usage
