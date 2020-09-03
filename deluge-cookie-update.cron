@@ -1,0 +1,11 @@
+#!/bin/bash
+# updates deluge cookie file (expires every hour) for other scripts relying on deluge api to readily rely on
+# add to cron to keep an active cookie at all times (NOT SECURE) for example:
+# 25,55 * * * * /path/to/deluge-cookie-update.cron > /dev/null
+
+WEB_PASS="deluge"
+DELUGE_HOST=10.1.2.3
+DELUGE_PORT=8112
+COOKIE="/path/to/deluge.cookie"
+
+/usr/bin/curl -s -c $COOKIE --compressed "http://$DELUGE_HOST:$DELUGE_PORT/json" -H 'Content-Type:application/json' -d '{ "id":1, "method":"auth.login", "params":["'$WEB_PASS'"] }'
