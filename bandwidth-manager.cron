@@ -1,0 +1,41 @@
+#!/bin/bash
+# this script uses tautulli to measure the WAN bandwidth used by plex streams, and updates deluge max upload to ensure that streams are never interrupted by torrents
+# it is designed to be ran with cron, examples below
+# also make sure to fill out each of the parameters to match your setup
+
+##### EXAMPLE CRON USAGE (runs every 30 seconds when using both lines) #####
+# * * * * * /path/to/bandwidth-manager.cron >> /path/to/bandwidth-manager.log 2>&1
+# * * * * * sleep 30 && /path/to/bandwidth-manager.cron >> /path/to/bandwidth-manager.log 2>&1
+
+##### PARAMETERS TO BE FILLED #####
+
+MAX_UPLOAD_BANDWIDTH=2250 #KiB/s Maximum WAN upload bandwidth the server network connection is capable of
+DELUGE_MIN_SPEED=100 #KiB/s Deluge speed is never set below this value
+BUFFER=250 #KiB/s Bring Deluge down by some additional buffer to prioritise streams (if there are any)
+
+TAUTULLI_HOST=10.1.2.3
+TAUTULLI_PORT=8181
+TAUTULLI_API_KEY=a1b2c3d4a1b2c3d4a1b2c3d4a1b2c3d4
+DELUGE_HOST=10.1.2.3
+DELUGE_PORT=8112
+DELUGE_COOKIE=/path/to/deluge.cookie #script relies on a valid cookie at this location, see deluge-cookie-update.sh
+LOG_FILE=/path/to/bandwidth-manager.log
+ERROR_NOTIFICATION_COMMAND="echo" #e.g. "gotify push -t 'Bandwidth Manager'"
+
+##### SCRIPT START #####
+
+# get WAN bandwidth used by streams from tautulli
+WAN_BANDWIDTH=$(curl -s -X GET "http://${TAUTULLI_HOST}:${TAUTULLI_PORT}/api/v2?apikey=${TAUTULLI_API_KEY}&cmd=get_activity" | jq .response.data.wan_bandwidth) #kbps
+WAN_BANDWIDTH=$(( $WAN_BANDWIDTH / 8 )) #KiB/s
+[ $WAN_BANDWIDTH -eq 0 ] && BUFFER=0 #don't bring down Deluge by the buffer if there's no remote streams
+
+# work out speed for deluge (subtract plex bandwidth from max specified bandwidth)
+DELUGE_SPEED=$(($MAX_UPLOAD_BANDWIDTH - $WAN_BANDWIDTH - $BUFFER))
+[ $DELUGE_SPEED -lt $DELUGE_MIN_SPEED ] && DELUGE_SPEED=$DELUGE_MIN_SPEED
+
+# set speed in deluge
+RETURN=$(curl -s -b "$DELUGE_COOKIE" --compressed -H "Content-Type: application/json" -d '{ "id":1, "method":"core.set_config", "params":[{"max_upload_speed":'$DELUGE_SPEED'}] }' "http://${DELUGE_HOST}:${DELUGE_PORT}/json" | jq -r .error)
+[ "$RETURN" != null ] && { sh -c "$ERROR_NOTIFICATION_COMMAND 'Error communicating with Deluge'"; echo "${RETURN}"; exit; }
+
+LOG_MESSAGE=$(echo "WAN Bandwidth is ${WAN_BANDWIDTH} KiB/s, Deluge set to ${DELUGE_SPEED} KiB/s")
+[ $WAN_BANDWIDTH != 0 ] && [ "$LOG_MESSAGE" != "$(tail -1 "$LOG_FILE" | cut -d ' ' -f4-)" ] && echo "$LOG_MESSAGE" | ts
