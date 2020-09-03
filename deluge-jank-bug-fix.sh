@@ -6,7 +6,7 @@
 # */15 * * * * /scripts/deluge-jank-bug-fix.sh >> /scripts/deluge-jank-bug-fix.log
 
 ##### CONFIGURE BELOW #####
-DELUGE_HOST=10.255.255.255
+DELUGE_HOST=10.1.2.3
 DELUGE_PORT=8112
 DELUGE_WEB_PASS="deluge"
 EXECUTE_SCRIPT="/scripts/deluge-execute.sh" #leave blank if not required
