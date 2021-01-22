@@ -28,7 +28,7 @@ then
 
         # convert any DOS formatted files to UNIX (remove carriage return line endings)
         sed -i.bak 's/\r$//' "$SUB_FILEPATH" && rm "${SUB_FILEPATH}.bak"
-        
+
         ### each record (in awk) is defined as a block of srt formatted subs (record seperator RS is essentially \n\n+, see docs), with each line of the block a seperate field .i.e.:
         # LINE NUMBER
         # TIMESTAMP --> TIMESTAMP
@@ -36,12 +36,27 @@ then
         # SUB LINE 2
         # ...
         #
-        
-        awk 'tolower($0) !~ /'"$REGEX_TO_REMOVE"'/ { $1 = VAR++ ; print }' RS='' FS='\n' OFS='\n' ORS='\n\n' VAR=1 "$SUB_FILEPATH" > "$SUB_FILEPATH.tmp" && \
+
+        awk 'tolower($0) !~ /'"$REGEX_TO_REMOVE"'/ { $1 = VAR++ ; print ; next } { print >> TRASH }' RS='' FS='\n' OFS='\n' ORS='\n\n' VAR=1 TRASH="$SUB_FILEPATH.trash.tmp" "$SUB_FILEPATH" > "$SUB_FILEPATH.tmp" && \
         mv "$SUB_FILEPATH.tmp" "$SUB_FILEPATH" && \
-        chmod 666 "$SUB_FILEPATH"
+        chmod 666 "$SUB_FILEPATH" && \
+        echo "sub-clean.sh succesfully processed $SUB_FILEPATH"
+
+        if [ -f "$SUB_FILEPATH.trash.tmp" ]
+        then
+
+                REMOVED_LINES=$(cat "$SUB_FILEPATH.trash.tmp")
+                rm "$SUB_FILEPATH.trash.tmp"
+
+                if [[ $REMOVED_LINES ]]
+                then
+                        echo "The following lines were removed:"
+                        echo "$REMOVED_LINES"
+                fi
+        fi
 
 else
         echo "Provided file must be .srt"
         exit 1
 fi
+
