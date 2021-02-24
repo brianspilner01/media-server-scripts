@@ -8,7 +8,7 @@
 ## Run this script across your whole media library:
 # find /path/to/library -name '*.srt' -exec /path/to/sub-clean.sh "{}" \;
 ## Add to Bazarr (Settings > Subtitles > Use Custom Post-Processing > Post-processing command):
-# /path/to/sub-clean.sh '{{subtitles}}' --
+# /path/to/sub-clean.sh "{{subtitles}}" --
 ## Add to Sub-Zero (in Plex > Settings > under Manage > Plugins > Sub-Zero Subtitles > Call this executable upon successful subtitle download (near the bottom):
 # /path/to/sub-clean.sh %(subtitle_path)s
 ## Test out what lines this script would remove:
