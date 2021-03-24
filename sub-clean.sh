@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # cleans srt formatted subtitles of common blocks that may be considered unwanted, works well as a post-process script for software such as Bazarr or Sub-Zero
 # please consider leaving or modifying this regex to properly credit the hard work that is put into providing these subtitles
 
@@ -23,7 +23,7 @@ SUB_FILEPATH="$1"
 # lowercase list of regex (gore/magic?) that will be removed from srt
 REGEX_TO_REMOVE='opensubtitles|sub(scene|rip)|podnapisi|addic7ed|titlovi|bozxphd|sazu489|psagmeno|normita|anoxmous|(br|dvd|web).?(rip|scr)|english (- )?us|sdh|srt|(yahoo|mail|book|fb|4m|hd)\. ?com|(sub(title)?(bed)?(s)?(fix)?|encode(d)?|correct(ed|ion(s)?)|caption(s|ed)|sync(ed|hroniz(ation|ed))?|english)(.pr(esented|oduced))?.?(by|&)|[^a-z]www\.|http|\. ?(co|pl|link|org|net|mp4|mkv|avi|pdf)([^a-z]|$)|©|™'
 
-if [[ $SUB_FILEPATH =~ \.srt$ ]] # only operate on srt files
+if [ "$(echo "$SUB_FILEPATH" | grep -P '\.srt$')" ] # only operate on srt files
 then
 
         # convert any DOS formatted files to UNIX (remove carriage return line endings)
@@ -48,7 +48,7 @@ then
                 REMOVED_LINES=$(cat "$SUB_FILEPATH.trash.tmp")
                 rm "$SUB_FILEPATH.trash.tmp"
 
-                if [[ $REMOVED_LINES ]]
+                if [ "$REMOVED_LINES" ]
                 then
                         echo "The following lines were removed:"
                         echo "$REMOVED_LINES"
