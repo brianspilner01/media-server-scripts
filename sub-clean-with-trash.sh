@@ -19,7 +19,7 @@ REGEX_TO_REMOVE='opensubtitles|sub(scene|rip)|podnapisi|addic7ed|titlovi|bozxphd
 SUB_BIN="$TRASH/$(basename "$SUB_FILEPATH")-removed.txt"
 [ -z "$TRASH" ] && SUB_BIN=/dev/null
 
-if [[ $SUB_FILEPATH =~ \.srt$ ]] # only operate on srt files
+if [ "$(echo "$SUB_FILEPATH" | grep -P '\.srt$')" ] # only operate on srt files
 then
         
         # convert any DOS formatted files to UNIX (remove carriage return line endings)
