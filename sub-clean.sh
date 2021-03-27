@@ -30,7 +30,7 @@ REGEX_TO_REMOVE='(br|dvd|web).?(rip|scr)|english (- )?us|sdh|srt|(yahoo|mail|boo
 # regex lists seperated for compatibility with old implementations of awk that require <400 characters
 REGEX_TO_REMOVE2='opensubtitles|sub(scene|rip)|podnapisi|addic7ed|titlovi|bozxphd|sazu489|psagmeno|normita|anoxmous|isubdb|americascardroom'
 
-if [ "$(echo "$SUB_FILEPATH" | grep -P '\.srt$')" ] # only operate on srt files
+if [ "$(echo "$SUB_FILEPATH" | grep '\.srt$')" ] # only operate on srt files
 then
 
         # convert any DOS formatted files to UNIX (remove carriage return line endings)
