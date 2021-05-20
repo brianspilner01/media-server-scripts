@@ -42,6 +42,9 @@ then
 			echo
 			echo "$LINES_TO_REMOVE"
 			echo
+			echo "File Path:"
+			echo "$SUB_FILEPATH"
+			echo
 			echo "#################################################"
 			echo
 			echo "Press enter if this is ok"
