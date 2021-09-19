@@ -34,7 +34,7 @@ if [ "$(echo "$SUB_FILEPATH" | grep '\.srt$')" ] # only operate on srt files
 then
 
         # convert any DOS formatted files to UNIX (remove carriage return line endings)
-        sed -i.bak 's/\r$//' "$SUB_FILEPATH" && rm "${SUB_FILEPATH}.bak"
+        awk '{ sub("\r$", ""); print }' "$SUB_FILEPATH" > "${SUB_FILEPATH}.bak" && mv "${SUB_FILEPATH}.bak" "$SUB_FILEPATH"
 
         ### each record (in awk) is defined as a block of srt formatted subs (record seperator RS is essentially \n\n+, see docs), with each line of the block a seperate field .i.e.:
         # LINE NUMBER
