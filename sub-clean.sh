@@ -12,7 +12,7 @@
 ## Add to Sub-Zero (in Plex > Settings > under Manage > Plugins > Sub-Zero Subtitles > Call this executable upon successful subtitle download (near the bottom):
 # /path/to/sub-clean.sh %(subtitle_path)s
 ## Test out what lines this script would remove:
-# REGEX_TO_REMOVE='(br|dvd|web).?(rip|scr)|english (- )?us|sdh|srt|(yahoo|mail|book|fb|4m|hd)\. ?com|(sub(title)?(bed)?(s)?(fix)?|encode(d)?|correct(ed|ion(s)?)|caption(s|ed)|sync(ed|hroniz(ation|ed))?|english)(.pr(esented|oduced))?.?(by|&)|[^a-z]www\.|http|\. ?(co|pl|link|org|net|mp4|mkv|avi|pdf)([^a-z]|$)|©|™'
+# REGEX_TO_REMOVE='(br|dvd|web).?(rip|scr)|english (- )?us|sdh|srt(?!a|o)|(yahoo|mail|book|fb|4m|hd)\. ?com|(sub(title)?(bed)?(s)?(fix)?|encode(d)?|correct(ed|ion(s)?)|caption(s|ed)|sync(ed|hroniz(ation|ed))?|english)(.pr(esented|oduced))?.?(by|&)|[^a-z]www\.|http|\. ?(co|pl|link|org|net|mp4|mkv|avi|pdf)([^a-z]|$)|©|™'
 # REGEX_TO_REMOVE2='opensubtitles|sub(scene|rip)|podnapisi|addic7ed|titlovi|bozxphd|sazu489|psagmeno|normita|anoxmous|isubdb|americascardroom'
 # awk 'tolower($0) ~ '"/$REGEX_TO_REMOVE/" RS='' ORS='\n\n' "/path/to/sub.srt"
 # awk 'tolower($0) ~ '"/$REGEX_TO_REMOVE2/" RS='' ORS='\n\n' "/path/to/sub.srt"
@@ -26,7 +26,7 @@ SUB_FILEPATH="$1"
 [ ! -f "$SUB_FILEPATH" ] && { echo "usage: sub-clean.sh [FILE]" ; echo "Warning: subtitle file does not exist" ; exit 1 ; }
 
 # lowercase list of regex (gore/magic?) that will be removed from srt
-REGEX_TO_REMOVE='(br|dvd|web).?(rip|scr)|english (- )?us|sdh|srt|(yahoo|mail|book|fb|4m|hd)\. ?com|(sub(title)?(bed)?(s)?(fix)?|encode(d)?|correct(ed|ion(s)?)|caption(s|ed)|sync(ed|hroniz(ation|ed))?|english)(.pr(esented|oduced))?.?(by|&)|[^a-z]www\.|http|\. ?(co|pl|link|org|net|mp4|mkv|avi|pdf)([^a-z]|$)|©|™'
+REGEX_TO_REMOVE='(br|dvd|web).?(rip|scr)|english (- )?us|sdh|srt(?!a|o)|(yahoo|mail|book|fb|4m|hd)\. ?com|(sub(title)?(bed)?(s)?(fix)?|encode(d)?|correct(ed|ion(s)?)|caption(s|ed)|sync(ed|hroniz(ation|ed))?|english)(.pr(esented|oduced))?.?(by|&)|[^a-z]www\.|http|\. ?(co|pl|link|org|net|mp4|mkv|avi|pdf)([^a-z]|$)|©|™'
 # regex lists seperated for compatibility with old implementations of awk that require <400 characters
 REGEX_TO_REMOVE2='opensubtitles|sub(scene|rip)|podnapisi|addic7ed|titlovi|bozxphd|sazu489|psagmeno|normita|anoxmous|isubdb|americascardroom'
 
