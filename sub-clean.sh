@@ -28,8 +28,7 @@ SUB_FILEPATH="$1"
 # lowercase list of regex (gore/magic?) that will be removed from srt
 REGEX_TO_REMOVE='(br|dvd|web).?(rip|scr)|english (- )?us|sdh|srt|(yahoo|mail|book|fb|4m|hd)\. ?com|(sub(title)?(bed)?(s)?(fix)?|encode(d)?|correct(ed|ion(s)?)|caption(s|ed)|sync(ed|hroniz(ation|ed))?|english)(.pr(esented|oduced))?.?(by|&)|[^a-z]www\.|http|\. ?(co|pl|link|org|net|mp4|mkv|avi|pdf)([^a-z]|$)|©|™'
 # regex lists seperated for compatibility with old implementations of awk that require <400 characters
-REGEX_TO_REMOVE2='opensubtitles|sub(scene|rip)|podnapisi|addic7ed|titlovi|bozxphd|sazu489|psagmeno|normita|anoxmous|isubdb|americascardroom'
-
+REGEX_TO_REMOVE2='clearway|opensubtitles|sub(scene|rip)|podnapisi|addic7ed|titlovi|bozxphd|sazu489|psagmeno|normita|anoxmous|isubdb|americascardroom'
 if [ "$(echo "$SUB_FILEPATH" | grep '\.srt$')" ] # only operate on srt files
 then
 
